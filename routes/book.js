@@ -43,6 +43,7 @@ router.post("/changeStatus", verify, async (request, response) => {
         // If user wants to remove the book
         if (book && status === "remove") {
             await Book.deleteOne({ userId: _id, bookId });
+            updatedBook = { success: "Book removed successfully." };
         }
 
         // Change book status
@@ -58,6 +59,11 @@ router.post("/changeStatus", verify, async (request, response) => {
                 },
                 { new: true }
             );
+        }
+
+        // Try to remove book that does not exist
+        else if (status === "remove") {
+            return response.status(404).json({ error: "Can't remove book" });
         }
 
         // If the user adds the book for the first time
@@ -100,7 +106,7 @@ router.post("/changeScore", verify, async (request, response) => {
 
         // Get Book
         const book = await Book.findOne({ userId: _id, bookId });
-        if (!book) return response.status(404).json({ error: "Can't score a book without reading it." });
+        if (!book) return response.status(404).json({ error: "Can't score a book without reading it" });
 
         // Update Book
         const updatedBook = await Book.findOneAndUpdate({ userId: _id, bookId }, { $set: { score } }, { new: true });
@@ -130,14 +136,14 @@ router.post("/changeFinishDate", verify, async (request, response) => {
 
         // Get Book
         const book = await Book.findOne({ userId: _id, bookId });
-        if (!book) return response.status(404).json({ error: "Can't score a book without reading it." });
+        if (!book) return response.status(404).json({ error: "Can't score a book without reading it" });
 
         const today = new Date();
         const currentMonth = today.getUTCMonth();
         const currentYear = today.getUTCFullYear();
 
         if (year > currentYear || (year === currentYear && month > currentMonth))
-            return response.status(404).json({ error: "The date can not be in the future." });
+            return response.status(404).json({ error: "The date can not be in the future" });
 
         // Update Book
         const updatedBook = await Book.findOneAndUpdate(

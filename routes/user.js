@@ -34,7 +34,7 @@ router.post("/register", async (request, response) => {
 
     // Check if the email has already been used
     const emailExists = await User.findOne({ email });
-    if (emailExists) return response.status(409).json({ error: "Email already taken." });
+    if (emailExists) return response.status(409).json({ error: "Email already taken" });
 
     // Hash the password
     const salt = await bcrypt.genSalt(10);
@@ -75,7 +75,7 @@ router.post("/login", async (request, response) => {
 
         // Check if the password is correct
         const validPassword = await bcrypt.compare(password, user.password);
-        if (!validPassword) return response.status(403).json({ error: "Invalid password." });
+        if (!validPassword) return response.status(403).json({ error: "Invalid password" });
 
         // Create and assign token
         const token = webToken.sign({ _id: user._id }, process.env.TOKEN_SECRET, {
@@ -127,11 +127,11 @@ router.post("/changeEmail", verify, async (request, response) => {
 
         // Check that the new email isn't already taken
         const repeatedUser = await User.findOne({ email });
-        if (repeatedUser) return response.status(409).json({ error: "Email already taken." });
+        if (repeatedUser) return response.status(409).json({ error: "Email already taken" });
 
         // Check if the password is correct
         const validPassword = await bcrypt.compare(password, user.password);
-        if (!validPassword) return response.status(403).json({ error: "Invalid password." });
+        if (!validPassword) return response.status(403).json({ error: "Invalid password" });
 
         // Update User
         const newUser = await User.findOneAndUpdate({ _id }, { $set: { email } }, { new: true });
@@ -162,11 +162,11 @@ router.post("/changePassword", verify, async (request, response) => {
 
         // Check if the password is correct
         const validPassword = await bcrypt.compare(password, user.password);
-        if (!validPassword) return response.status(403).json({ error: "Invalid password." });
+        if (!validPassword) return response.status(403).json({ error: "Invalid password" });
 
         // Check that the password is different
         const samePassword = await bcrypt.compare(newPassword, user.password);
-        if (samePassword) return response.status(409).json({ error: "The new password is the same." });
+        if (samePassword) return response.status(409).json({ error: "The new password is the same" });
 
         // Hash the new password
         const salt = await bcrypt.genSalt(10);
@@ -201,7 +201,7 @@ router.post("/deleteAccount", verify, async (request, response) => {
 
         // Check if the password is correct
         const validPassword = await bcrypt.compare(password, user.password);
-        if (!validPassword) return response.status(403).json({ error: "Invalid password." });
+        if (!validPassword) return response.status(403).json({ error: "Invalid password" });
 
         // Delete User
         await User.deleteOne({ _id });
