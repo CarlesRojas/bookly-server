@@ -56,6 +56,8 @@ const changeStatusValidation = (data) => {
     const schema = Joi.object({
         bookId: Joi.string().min(6).max(1024).required(),
         status: Joi.string().valid("finished", "wantToRead", "reading", "remove"),
+        month: Joi.number().min(0).max(11).required(),
+        year: Joi.number().min(1900).required(),
     });
 
     return schema.validate(data);

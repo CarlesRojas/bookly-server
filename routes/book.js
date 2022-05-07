@@ -29,7 +29,7 @@ router.post("/changeStatus", verify, async (request, response) => {
     try {
         // Deconstruct request
         const { _id } = request;
-        const { bookId, status } = request.body;
+        const { bookId, status, month, year } = request.body;
 
         // Get user
         const user = await User.findOne({ _id });
@@ -39,9 +39,6 @@ router.post("/changeStatus", verify, async (request, response) => {
         const book = await Book.findOne({ userId: _id, bookId });
 
         let updatedBook = null;
-        const today = new Date();
-        const month = today.getUTCMonth();
-        const year = today.getUTCFullYear();
 
         // If user wants to remove the book
         if (book && status === "remove") {
