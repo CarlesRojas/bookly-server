@@ -12,6 +12,7 @@ const router = require("express").Router();
 
 // Get schemas
 const User = require("../models/User");
+const Book = require("../models/Book");
 
 // Get the Validation schemas
 const {
@@ -205,6 +206,9 @@ router.post("/deleteAccount", verify, async (request, response) => {
 
         // Delete User
         await User.deleteOne({ _id });
+
+        // Delete users Fast Entries
+        await Book.deleteMany({ userId: _id });
 
         // Return success
         response.status(200).json({ success: true });
